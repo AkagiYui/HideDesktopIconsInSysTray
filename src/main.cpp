@@ -1,4 +1,4 @@
-// SysTrayDemo.cpp : Defines the entry point for the application.
+// main.cpp : Defines the entry point for the application.
 //
 
 #include "resource.h"
@@ -20,7 +20,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance);
 
 BOOL InitInstance(HINSTANCE);
 
-LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                        HINSTANCE hPrevInstance,
@@ -46,7 +46,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SYSTRAYDEMO));
 
 // Main message loop:
-    while (GetMessage(&msg, NULL, 0, 0)) {
+    while (GetMessage(&msg, nullptr, 0, 0)) {
         if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg)) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
@@ -81,7 +81,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance) {
     wcex.cbWndExtra = 0;
     wcex.hInstance = hInstance;
     wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SYSTRAYDEMO));
-    wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1);
     wcex.lpszMenuName = MAKEINTRESOURCE(IDC_SYSTRAYDEMO);
     wcex.lpszClassName = szWindowClass;
