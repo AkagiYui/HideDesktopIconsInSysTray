@@ -3,6 +3,7 @@
 
 #include "resource.h"
 #include "stdafx.h"
+#include "toggle/toggle.h"
 
 #define MAX_LOADSTRING 100
 #define    WM_USER_SHELLICON WM_USER + 1
@@ -154,22 +155,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
         case WM_USER_SHELLICON:
 // systray msg callback
             switch (LOWORD(lParam)) {
+                case WM_LBUTTONDBLCLK:
+                    DesktopIcons::toggle();
+                    break;
                 case WM_RBUTTONDOWN:
-                    UINT uFlag = MF_BYPOSITION | MF_STRING;
                     GetCursorPos(&lpClickPoint);
                     hPopMenu = CreatePopupMenu();
-                    InsertMenu(hPopMenu, 0xFFFFFFFF, MF_BYPOSITION | MF_STRING, IDM_ABOUT, _T("About"));
-                    if (bDisable == TRUE) {
-                        uFlag |= MF_GRAYED;
-                    }
-                    InsertMenu(hPopMenu, 0xFFFFFFFF, uFlag, IDM_TEST2, _T("Test 2")); // Test 2
-                    InsertMenu(hPopMenu, 0xFFFFFFFF, uFlag, IDM_TEST1, _T("Test 1")); // Test 1
-                    InsertMenu(hPopMenu, 0xFFFFFFFF, MF_SEPARATOR, IDM_SEP, _T("SEP"));
-                    if (bDisable == TRUE) {
-                        InsertMenu(hPopMenu, 0xFFFFFFFF, MF_BYPOSITION | MF_STRING, IDM_ENABLE, _T("Enable"));
-                    } else {
-                        InsertMenu(hPopMenu, 0xFFFFFFFF, MF_BYPOSITION | MF_STRING, IDM_DISABLE, _T("Disable"));
-                    }
+                    InsertMenu(hPopMenu, 0xFFFFFFFF, MF_BYPOSITION | MF_STRING, IDM_ABOUT, _T("Toggle"));
                     InsertMenu(hPopMenu, 0xFFFFFFFF, MF_SEPARATOR, IDM_SEP, _T("SEP"));
                     InsertMenu(hPopMenu, 0xFFFFFFFF, MF_BYPOSITION | MF_STRING, IDM_EXIT, _T("Exit"));
 
@@ -186,19 +178,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 // Parse the menu selections:
             switch (wmId) {
                 case IDM_ABOUT:
-                    DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                    break;
-                case IDM_TEST1:
-                    MessageBox(NULL, _T("This is a test for menu Test 1"), _T("Test 1"), MB_OK);
-                    break;
-                case IDM_TEST2:
-                    MessageBox(NULL, _T("This is a test for menu Test 2"), _T("Test 2"), MB_OK);
-                    break;
-                case IDM_DISABLE:
-                    bDisable = TRUE;
-                    break;
-                case IDM_ENABLE:
-                    bDisable = FALSE;
+                    DesktopIcons::toggle();
                     break;
                 case IDM_EXIT:
                     Shell_NotifyIcon(NIM_DELETE, &nidApp);
