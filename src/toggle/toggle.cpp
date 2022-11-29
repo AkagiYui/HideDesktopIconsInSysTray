@@ -62,7 +62,6 @@ void FindDesktopFolderView(REFIID riid, void **ppv, std::string const &interface
             "Could not query desktop IShellView for interface " + interfaceName);
 }
 
-
 void ToggleDesktopIcons() {
     CComPtr<IFolderView2> spView;
     FindDesktopFolderView(IID_PPV_ARGS(&spView), "IFolderView2");

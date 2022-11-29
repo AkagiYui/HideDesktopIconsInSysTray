@@ -6,7 +6,7 @@
 #include "toggle/toggle.h"
 
 #define MAX_LOADSTRING 100
-#define    WM_USER_SHELLICON WM_USER + 1
+#define WM_USER_SHELLICON (WM_USER + 1)
 
 // Global Variables:
 HINSTANCE hInst;    // current instance
@@ -14,17 +14,13 @@ NOTIFYICONDATA nidApp;
 HMENU hPopMenu;
 TCHAR szTitle[MAX_LOADSTRING];                    // The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
-TCHAR szApplicationToolTip[MAX_LOADSTRING];        // the main window class name
-BOOL bDisable = FALSE;                            // keep application state
 
 // Forward declarations of functions included in this code module:
 ATOM MyRegisterClass(HINSTANCE hInstance);
 
-BOOL InitInstance(HINSTANCE, int);
+BOOL InitInstance(HINSTANCE);
 
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
-
-INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                        HINSTANCE hPrevInstance,
@@ -33,7 +29,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-// TODO: Place code here.
     MSG msg;
     HACCEL hAccelTable;
 
@@ -44,7 +39,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     MyRegisterClass(hInstance);
 
 // Perform application initialization:
-    if (!InitInstance(hInstance, nCmdShow)) {
+    if (!InitInstance(hInstance)) {
         return FALSE;
     }
 
@@ -105,14 +100,14 @@ ATOM MyRegisterClass(HINSTANCE hInstance) {
 //        In this function, we save the instance handle in a global variable and
 //        create and display the main program window.
 //
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
+BOOL InitInstance(HINSTANCE hInstance) {
     HWND hWnd;
     HICON hMainIcon;
 
     hInst = hInstance; // Store instance handle in our global variable
 
     hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-                        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+                        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
     if (!hWnd) {
         return FALSE;
@@ -132,10 +127,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
     return TRUE;
 }
 
-void Init() {
-    // user defined message that will be sent as the notification message to the Window Procedure
-}
-
 //
 //  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
@@ -147,11 +138,10 @@ void Init() {
 //
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-    int wmId, wmEvent;
+    int wmId;
     POINT lpClickPoint;
 
     switch (message) {
-
         case WM_USER_SHELLICON:
 // systray msg callback
             switch (LOWORD(lParam)) {
@@ -167,14 +157,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 
                     SetForegroundWindow(hWnd);
                     TrackPopupMenu(hPopMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_BOTTOMALIGN, lpClickPoint.x,
-                                   lpClickPoint.y, 0, hWnd, NULL);
+                                   lpClickPoint.y, 0, hWnd, nullptr);
                     return TRUE;
-
             }
             break;
         case WM_COMMAND:
             wmId = LOWORD(wParam);
-            wmEvent = HIWORD(wParam);
 // Parse the menu selections:
             switch (wmId) {
                 case IDM_ABOUT:
@@ -188,12 +176,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
                     return DefWindowProc(hWnd, message, wParam, lParam);
             }
             break;
-/*
-case WM_PAINT:
-hdc = BeginPaint(hWnd, &ps);
-// TODO: Add any drawing code here...
-EndPaint(hWnd, &ps);
-break;*/
         case WM_DESTROY:
             PostQuitMessage(0);
             break;
@@ -201,21 +183,4 @@ break;*/
             return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
-}
-
-// Message handler for about box.
-INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
-    UNREFERENCED_PARAMETER(lParam);
-    switch (message) {
-        case WM_INITDIALOG:
-            return (INT_PTR) TRUE;
-
-        case WM_COMMAND:
-            if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL) {
-                EndDialog(hDlg, LOWORD(wParam));
-                return (INT_PTR) TRUE;
-            }
-            break;
-    }
-    return (INT_PTR) FALSE;
 }
